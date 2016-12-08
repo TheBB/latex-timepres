@@ -1,0 +1,760 @@
+\documentclass{beamer}
+
+\usetheme{Rochester}
+\usecolortheme{crane}
+
+\usepackage{tikz}
+\usepackage{ifthen}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+
+\usepgfplotslibrary{dateplot}
+
+\usepackage{siunitx}
+\usepackage{wasysym}
+
+\title{Time and Coordinates}
+\author{Eivind Fonn}
+\date{Juleseminar 2016}
+
+\newcommand{\LST}{\text{LST}}
+\newcommand{\GST}{\text{GST}}
+\newcommand{\AXES}{
+  \draw[tdplot_rotated_coords,red,->] (0,0,0) -- (2,0,0);
+  \draw[tdplot_rotated_coords,green,->] (0,0,0) -- (0,2,0);
+  \draw[tdplot_rotated_coords,blue,->] (0,0,0) -- (0,0,2);
+}
+\newcommand{\dd}{\text{d}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{Goal}
+
+  \begin{center}
+    To convince you that the second, minute, hour, day and year are not units of
+    time.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring time}
+
+  To measure time we need a repeatable phenomenon with a consistent period.
+  Typical choices are
+
+  \begin{itemize}
+  \item The motion of the sun with respect to an observer-local coordinate
+    system on the Earth, one period of which is called a \emph{day}.
+  \item The fluctuations of the seasons, one period of which is called a
+    \emph{year}.
+  \item The radiation corresponding to the transition between the two hyperfine
+    levels of the ground state of caesium-133, $\SI{9192631770}{}$ of which are
+    called an \emph{SI second}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring time}
+
+  \begin{itemize}
+  \item A day is divided into 24 \emph{hours}, $\SI{1440}{}$ \emph{minutes} and
+    $\SI{86400}{}$ \emph{seconds}.
+  \item Likewise, 60 SI seconds is an \emph{SI minute}, $\SI{3600}{}$ SI seconds
+    is an \emph{SI hour}, and $\SI{86400}{}$ SI seconds is an \emph{SI day}.
+  \item The fact that a day can be split into a whole number of seconds, all of
+    which are approximately equal to the SI second is ``pure coincidence.''
+  \item The less said about the division of a year into a number of days, the
+    better.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problems}
+
+  \begin{itemize}
+  \item The length of a year or a day are not only poorly defined, as we will
+    see, they're also not consistent over time.
+  \item As for caesium-133 radiation, it is comparatively difficult to observe
+    by regular people, never mind counting to 9 billion in one second.
+  \item Modern technology has solved the caesium-133 problem for us, but
+    a way of controlling the motion of planets remains elusive.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Coordinates}
+
+  \begin{center}
+    In a universe where everything that we can see moves, and everything is
+    relative, how do we define any coordinates at all?
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Terminology}
+
+  \begin{center}
+    \tdplotsetmaincoords{70}{210}
+    \begin{tikzpicture}[tdplot_main_coords]
+      \begin{scope}
+        \clip[tdplot_screen_coords] (0,0) circle (2);
+        \shade[tdplot_screen_coords, ball color=gray, opacity=0.4] (-0.1,0) ellipse (2.4 and 2);
+      \end{scope}
+
+      \only<2->{
+        \tdplotsetrotatedcoords{0}{23.4}{30}
+        \draw[tdplot_rotated_coords,red] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,red] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,red,opacity=0.1] (0,0) circle (2);
+      }
+
+      \only<3,5->{
+        \tdplotsetrotatedcoords{0}{0}{30}
+        \draw[tdplot_rotated_coords,blue] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,blue] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,blue,opacity=0.1] (0,0) circle (2);
+      }
+
+      \only<4>{
+        \tdplotsetrotatedcoords{10}{1.2}{20}
+        \draw[tdplot_rotated_coords,blue,opacity=0.25] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,blue,opacity=0.25] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,blue,opacity=0.025] (0,0) circle (2);
+        \tdplotsetrotatedcoords{-10}{1.5}{40}
+        \draw[tdplot_rotated_coords,blue,opacity=0.25] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,blue,opacity=0.25] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,blue,opacity=0.025] (0,0) circle (2);
+        \tdplotsetrotatedcoords{-2}{0.1}{32}
+        \draw[tdplot_rotated_coords,blue,opacity=0.25] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,blue,opacity=0.25] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,blue,opacity=0.025] (0,0) circle (2);
+        \tdplotsetrotatedcoords{-20}{-0.7}{50}
+        \draw[tdplot_rotated_coords,blue,opacity=0.25] (2,0) arc (0:180:2);
+        \draw[tdplot_rotated_coords,dotted,blue,opacity=0.25] (-2,0) arc (180:360:2);
+        \fill[tdplot_rotated_coords,blue,opacity=0.025] (0,0) circle (2);
+      }
+
+      \only<5>{
+        \tdplotsetrotatedcoords{-90}{90}{90}
+        \draw[tdplot_rotated_coords,black,fill=black,opacity=0.25]
+        (0,0) -- (-2,0) arc (180:156.6:2) -- (0,0);
+      }
+
+      \only<6>{
+        \draw[very thin] (0,-2) -- (0,2);
+      }
+
+      \only<7>{
+        \draw[thick,yellow,->] (0,2) arc (90:138.59:2)
+        node[midway,below] {$\alpha$};
+        \tdplotsetrotatedcoords{48.59}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:70.58:2)
+        node[midway,left] {$\delta$};
+      }
+
+      \only<8>{
+        \draw[thick,yellow,->] (0,2) arc (90:138.59:2);
+        \tdplotsetrotatedcoords{48.59}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:70.58:2);
+        \tdplotsetrotatedcoords{0}{23.4}{70}
+        \draw[tdplot_rotated_coords,thick,yellow,<-] (0,2) arc (90:20:2)
+        node[midway,above left] {$\lambda$};
+        \tdplotsetrotatedthetaplanecoords{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (0,2) arc (90:40:2)
+        node[midway,above right] {$\beta$};
+      }
+
+      \only<9-10>{
+        \tdplotsetrotatedcoords{60}{-90}{0}
+        \draw[tdplot_rotated_coords] (2,0) arc (0:158:2);
+        \draw[tdplot_rotated_coords,dotted] (-2,0) arc (180:158:2);
+      }
+
+      \only<10>{
+        \tdplotsetrotatedcoords{60}{0}{0}
+        \draw[tdplot_rotated_coords,thick,yellow,->] (0,2) arc (90:50:2)
+        node[midway,below] {$h$};
+        \tdplotsetrotatedcoords{20}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:70:2)
+        node[midway,left] {$\delta$};
+      }
+
+      \only<11>{
+        \tdplotsetrotatedcoords{60}{-90}{0}
+        \draw[tdplot_rotated_coords,black!50] (2,0) arc (0:158:2);
+        \draw[tdplot_rotated_coords,dotted,black!50] (-2,0) arc (180:158:2);
+        \tdplotsetrotatedcoords{80}{-90}{0}
+        \draw[tdplot_rotated_coords] (2,0) arc (0:158:2);
+        \draw[tdplot_rotated_coords,dotted] (-2,0) arc (180:158:2);
+        \tdplotsetrotatedcoords{80}{0}{0}
+        \draw[tdplot_rotated_coords,thick,yellow,->] (0,2) arc (90:30:2);
+        \tdplotsetrotatedcoords{20}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:70:2);
+      }
+
+      \only<12>{
+        \tdplotsetrotatedcoords{80}{-90}{0}
+        \draw[tdplot_rotated_coords] (2,0) arc (0:158:2);
+        \draw[tdplot_rotated_coords,dotted] (-2,0) arc (180:158:2);
+        \tdplotsetrotatedcoords{80}{0}{0}
+        \draw[tdplot_rotated_coords,thick,yellow,->] (0,2) arc (90:10:2)
+        node[midway,below] {$\LST$};
+      }
+
+      \draw[tdplot_screen_coords,black,fill=blue!75,opacity=0.5] (0,0) circle[radius=0.07];
+    \end{tikzpicture}
+  \end{center}
+
+  \begin{center}
+    \only<1>{
+      \emph{Celestial sphere}: the backdrop of far-away objects on the night
+      sky. These move extremely slowly and can be considered fixed on a human
+      development timescale.
+    }
+    \only<2>{
+      \emph{Ecliptic}: The trajectory traced out by the Sun on the celestial
+      sphere over the course of a year. This is a great circle that moves almost
+      not at all with respect to the celestial sphere.
+    }
+    \only<3>{
+      \emph{Equatorial plane}: The projection of Earth's equator onto the
+      celestial sphere. This is also a great circle, but it moves quite
+      significantly because the Earth doesn't ``rotate,'' it ``wobbles.''
+    }
+    \only<4>{
+      \emph{Precession} and \emph{nutation}: The ``long'' and ``short'' term
+      movement of the equatorial plane, with principal periods of roughly
+      $\SI{26000}{years}$ and $\SI{18.6}{years}$, respectively.
+    }
+    \only<5>{
+      \emph{Obliquity of the ecliptic}: The angle of intersection between the
+      equatorial plane and the ecliptic, currently about $\SI{23.4}{degrees}$
+      and increasing due to precession.
+    }
+    \only<6>{
+      \emph{Equinoxes}: The points of intersection between the equatorial plane
+      and the ecliptic. The one where the Sun moves to the northern hemisphere
+      (the \emph{ascending node}) is the \emph{vernal equinox}.
+    }
+    \only<7>{
+      \emph{Equatorial coordinates}: Measured in terms of \emph{declination}
+      $\delta$ (northern latitude) and \emph{right ascension} $\alpha$ (eastern
+      longitude, from the equinox).
+    }
+    \only<8>{
+      \emph{Ecliptic coordinates}: Measured in terms of \emph{ecliptic
+        longitude} $\lambda$ and \emph{ecliptic latitude} $\beta$. Not so useful
+      for observers on Earth, for obvious reasons.
+    }
+    \only<9>{
+      \emph{Local meridian}: For a given observer, the plane that passes through
+      the observer's zenith, and which is perpendicular to the equator. It
+      rotates along with the earth.
+    }
+    \only<10>{
+      \emph{Local observer coordinates}: The same system as equatorial
+      coordinates, only with the local meridian as the origin. The coordinate
+      $h$ is referred to as the \emph{local hour angle}.
+    }
+    \only<11>{
+      Since the local meridian moves eastward along with the rotation of the
+      Earth, the hour angle of anything increases by about one degree every
+      four minutes.
+    }
+    \only<12>{
+      \emph{Local sidereal time (LST)}: The hour angle of the equinox. When
+      measured on the Greenwich meridian, this is called \emph{Greenwich
+        sidereal time} (GST).
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{For the mathies}
+
+  As long as you know where you are, it's easy to convert:
+  \[
+    \LST = \GST + \lambda_\text{obs},
+  \]
+  where $\lambda_\text{obs}$ is the eastern longitude of the observer.
+  Moreover,
+  \begin{align*}
+    h_\text{obj}
+    &= \LST - \alpha_\text{obj} \\
+    &= \GST + \lambda_\text{obs} - \alpha_\text{obj}.
+  \end{align*}
+  Note that, confusingly, the hour angle is measured \emph{westward}, unlike
+  right ascension.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solar time}
+
+  \begin{center}
+    \tdplotsetmaincoords{70}{210}
+    \begin{tikzpicture}[tdplot_main_coords]
+      \begin{scope}
+        \clip[tdplot_screen_coords] (0,0) circle (2);
+        \shade[tdplot_screen_coords, ball color=gray, opacity=0.4] (-0.1,0) ellipse (2.4 and 2);
+      \end{scope}
+
+      \tdplotsetrotatedcoords{0}{23.4}{30}
+      \draw[tdplot_rotated_coords,red] (2,0) arc (0:180:2);
+      \draw[tdplot_rotated_coords,dotted,red] (-2,0) arc (180:360:2);
+      \fill[tdplot_rotated_coords,red,opacity=0.1] (0,0) circle (2);
+
+      \tdplotsetrotatedcoords{0}{0}{30}
+      \draw[tdplot_rotated_coords,blue] (2,0) arc (0:180:2);
+      \draw[tdplot_rotated_coords,dotted,blue] (-2,0) arc (180:360:2);
+      \fill[tdplot_rotated_coords,blue,opacity=0.1] (0,0) circle (2);
+
+      \tdplotsetrotatedcoords{60}{-90}{0}
+      \draw[tdplot_rotated_coords] (2,0) arc (0:158:2);
+      \draw[tdplot_rotated_coords,dotted] (-2,0) arc (180:158:2);
+
+      \only<1>{
+        \tdplotsetrotatedcoords{60}{0}{0}
+        \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) arc (90:57.91:2)
+        node[midway,below] {$h_{\text{sun}}$};
+        \tdplotsetrotatedcoords{27.91}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:11.48:2);
+        \tdplottransformmainscreen{-0.9174}{1.7320}{0.3981}
+        \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+      }
+
+      \only<2>{
+        \tdplotsetrotatedcoords{60}{0}{0}
+        \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) arc (90:72.53:2);
+        \tdplotsetrotatedcoords{42.54}{90}{90}
+        \draw[tdplot_rotated_coords,thick,teal,->] (2,0) arc (0:16.34:2);
+        \tdplottransformmainscreen{-1.2973}{1.4143}{0.5627}
+        \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+      }
+
+      \draw[tdplot_screen_coords,black,fill=blue!75,opacity=0.5] (0,0) circle[radius=0.07];
+    \end{tikzpicture}
+  \end{center}
+
+  \begin{center}
+    \only<1>{
+      \emph{Local solar time}: The local hour angle of the sun. A constant offset of
+      $\SI{12}{\hour}$ is often applied so that time ``zero'' is at midnight.
+      Greenwich solar time is similarly defined.
+    }
+    \only<2>{
+      The Sun moves slowly eastward, which means that exactly one sidereal day
+      later, the local solar time is slightly \emph{earlier}. In other words, a
+      solar day is longer than a sidereal day.
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Solar time}
+
+  It is tempting to use Greenwich solar time as ``universal time.''
+  Unfortunately, the angular speed
+  \[
+    \frac{\dd}{\dd t} h_{\text{sun}}(t)
+  \]
+  is not constant. Or, in other words, the right ascension of the sun is not
+  increasing at a fixed rate. Why is this? There are two reasons.
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Equation of Time}
+
+  \begin{itemize}
+  \item The motion of the Sun across the ecliptic is due to the motion of the
+    Earth around the Sun.
+  \item Since Earth's orbit is elliptical, the orbital speed is slower at the
+    apoapsis (early July) and faster at the periapsis (early January).
+  \end{itemize}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        domain=0:1,width=\textwidth,height=0.5\textheight,
+        xmin=0,xmax=1,ymin=-8,ymax=8,axis lines=middle,
+        samples=360,
+        xtick={0.001,0.5,1},
+        xticklabels={Periapsis,Apoapsis,Periapsis},
+        ytick={-10,-5,0,5,10},
+        minor y tick num={4},
+        yticklabels={},
+        grid=major,
+        ]
+        \addplot[blue,thick,mark=none] {7.91 * cos(deg(2*pi*x))};
+      \end{axis}
+    \end{tikzpicture}
+
+    Length of solar day in seconds due to ellipticity.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Equation of Time}
+
+  \begin{center}
+    \tdplotsetmaincoords{70}{210}
+    \begin{tikzpicture}[tdplot_main_coords]
+      \begin{scope}
+        \clip[tdplot_screen_coords] (0,0) circle (2);
+        \shade[tdplot_screen_coords, ball color=gray, opacity=0.4] (-0.1,0) ellipse (2.4 and 2);
+      \end{scope}
+
+      \tdplotsetrotatedcoords{0}{23.4}{30}
+      \draw[tdplot_rotated_coords,red] (2,0) arc (0:180:2);
+      \draw[tdplot_rotated_coords,dotted,red] (-2,0) arc (180:360:2);
+      \fill[tdplot_rotated_coords,red,opacity=0.1] (0,0) circle (2);
+
+      \tdplotsetrotatedcoords{0}{0}{30}
+      \draw[tdplot_rotated_coords,blue] (2,0) arc (0:180:2);
+      \draw[tdplot_rotated_coords,dotted,blue] (-2,0) arc (180:360:2);
+      \fill[tdplot_rotated_coords,blue,opacity=0.1] (0,0) circle (2);
+
+      \tdplotsetrotatedcoords{0}{23.4}{0}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{0}{2}{0}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \tdplotsetrotatedcoords{0}{23.4}{45}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{-1.2973}{1.4143}{0.5627}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \tdplotsetrotatedcoords{0}{23.4}{90}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{-1.8348}{0.0000}{0.7959}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \tdplotsetrotatedcoords{0}{23.4}{180}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{-0.0000}{-2.0000}{0.0000}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \tdplotsetrotatedcoords{0}{23.4}{225}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{1.2973}{-1.4143}{-0.5627}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \tdplotsetrotatedcoords{0}{23.4}{270}
+      \draw[tdplot_rotated_coords,yellow,thick,->] (0,2) -- (-0.5,2);
+      \tdplottransformmainscreen{1.8348}{-0.0000}{-0.7959}
+      \draw[tdplot_screen_coords,black,fill=yellow,opacity=0.75] (\tdplotresx,\tdplotresy) circle[radius=0.07];
+
+      \draw[tdplot_screen_coords,black,fill=blue!75,opacity=0.5] (0,0) circle[radius=0.07];
+    \end{tikzpicture}
+  \end{center}
+
+  \begin{center}
+    \only<1>{
+      Even so, the speed of the Sun projected onto the equatorial plane will not
+      be constant, but slower near the equinoxes and faster near the solstices.
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Equation of Time}
+
+  This gives an even more pronounced effect.
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        domain=0:1,width=\textwidth,height=0.5\textheight,
+        xmin=0,xmax=1,ymin=-21,ymax=21,axis lines=middle,
+        samples=360,
+        xtick={0.24501,0.49501,0.74501,0.99501},
+        xticklabels={Equinox,Solstice,Equinox,Solstice},
+        ytick={-20,-15,-10,-5,0,5,10,15,20},
+        minor y tick num={4},
+        yticklabels={},
+        grid=major,
+        ]
+        \addplot[blue,thick,mark=none] {20.37 * cos(2*deg(2*pi*x) + 3.5932)};
+      \end{axis}
+    \end{tikzpicture}
+
+    Length of solar day in seconds due to the obliquity of the ecliptic.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Equation of Time}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        domain=0:1,width=\textwidth,height=0.7\textheight,
+        xmin=0,xmax=1,ymin=-30,ymax=30,axis lines=middle,
+        samples=360,
+        xtick={0,0.24501,0.49501,0.5,0.74501,0.99501,1},
+        xticklabels={,Equinox,Solstice,,Equinox,Solstice,},
+        ytick={-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30},
+        minor y tick num={4},
+        yticklabels={},
+        grid=major,
+        ]
+        \addplot[blue,thick,mark=none] {20.37 * cos(2*deg(2*pi*x) + 3.5932) + 7.91 * cos(deg(2*pi*x))};
+      \end{axis}
+    \end{tikzpicture}
+
+    Length of solar day in seconds.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Equation of Time}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        domain=0:1,width=\textwidth,height=0.7\textheight,
+        xmin=0,xmax=1,ymin=-18,ymax=18,axis lines=middle,
+        samples=360,
+        xtick={0,0.24501,0.49501,0.5,0.74501,0.99501,1},
+        xticklabels={,Equinox,Solstice,,Equinox,Solstice,},
+        ytick={-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30},
+        minor y tick num={4},
+        yticklabels={},
+        grid=major,
+        ]
+        \addplot[blue,thick,mark=none] {9.863 * sin(2*deg(2*pi*x) + 3.5932) + 7.659 * sin(deg(2*pi*x))};
+      \end{axis}
+    \end{tikzpicture}
+
+    The difference in minutes between a \emph{mean} solar clock and an
+    \emph{apparent} solar clock (a sundial) over the course of one year.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Mean Sun}
+
+  \begin{itemize}
+  \item The \emph{mean sun} is a theoretical point on the ecliptic whose right
+    ascension increases at a constant rate.
+  \item The long-term average of the difference between their right ascensions
+    is zero.
+    \[
+      \left< \underbrace{\alpha_{\text{app.~sun}} - \alpha_{\text{mean sun}}}_{\text{EOT}} \right>_t = 0
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mental gymnastics}
+
+  \begin{align*}
+    & \quad \text{Apparent solar days are longer} \\
+    \Rightarrow & \quad \text{Apparent solar time increases more slowly} \\
+    \Rightarrow & \quad \text{Mean solar time will appear to go faster} \\
+    \Rightarrow & \quad \text{The mean Sun will appear to lag behind the apparent Sun} \\
+    \Rightarrow & \quad \text{The apparent Sun is moving faster} \\
+    \Rightarrow & \quad \text{Earth must rotate more to catch up with it every day} \\
+    \Rightarrow & \quad \text{Apparent solar days are longer} \\
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Universal time}
+
+  Ok, so does \emph{mean} solar time increase at a constant rate?
+
+  \begin{itemize}
+  \item Close, but not really.
+  \item Friction due to tidal forces slowly taps the Earth of rotational
+    momentum, so mean (and apparent) solar days will keep getting longer as the
+    Earth slows down.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Universal time}
+
+  \begin{itemize}
+  \item UT1 (Universal time) is the time standard that measures mean solar time
+    at the Greenwich meridian.
+  \item In principle, there's no way to measure UT1 other than to do
+    observations (because it's an \emph{angle}, not a \emph{time}).
+  \item TAI (International Atomic Time) is the realization of the ideal time
+    measured at mean sea level on Earth.
+  \item In principle, there's no way to measure TAI other than to count
+    caesium-133 radation periods (because it's a \emph{time}, not an
+    \emph{angle}).
+  \item However, TAI at least increases at a constant rate.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Coordinated Universal Time}
+
+  \begin{itemize}
+  \item To create something that increases at a constant rate \emph{and} closely
+    aligns with the mean solar time, we have Coordinated Universal Time (UTC).
+  \item UTC is defined as a fixed offset from TAI, so it increases at the same
+    rate TAI does.
+  \item This offset is adjusted every now and then to keep UTC in close
+    agreement with UT1. This is done by adding or removing a second on certain
+    dates (last days of March, June, September and December).
+  \item At the moment we need to add leap seconds once every few years. About
+    $\SI{50000}{}$ years from now, we will need one leap second every day.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{$\text{UT1} - \text{UTC}$}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        date coordinates in=x,
+        width=\textwidth,height=0.7\textheight,
+        axis y line=middle,
+        axis x line=bottom,
+        xticklabel={\year},
+        grid=major,
+        ]
+        \addplot[blue, thick, mark=none]
+        table[x index={22}, y index={8}]{data.csv};
+      \end{axis}
+    \end{tikzpicture}
+
+    The historical difference between UT1 and UTC.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Length of Day (LOD)}
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[
+        date coordinates in=x,
+        width=\textwidth,height=0.7\textheight,
+        axis y line=middle,
+        axis x line=bottom,
+        xticklabel={\year},
+        grid=major,
+        ]
+        \addplot[blue, mark=none, very thin]
+        table[x index={22}, y index={10}]{data.csv};
+      \end{axis}
+    \end{tikzpicture}
+
+    The excess length of a mean solar day (relative to an SI day) measured in
+    milliseconds.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Complications}
+
+  \begin{itemize}
+  \item Since the equatorial plane moves, so does the equinox. This means
+    coordinate systems are invariably tied to specific dates. (The \emph{mean
+      equinox} is the position of the equinox ignoring the effects of nutation,
+    for example.) Trying to keep track of where the equinox is, is quite
+    complicated.
+  \item It's even harder to fit a whole number of days in a year than there is
+    to fit a whole number of seconds in a day. Don't get me started on
+    calendars\ldots
+  \item For that matter, did you know there are three different definitions of
+    ``year?'' Yep.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fun fact: The zodiac}
+
+  \begin{center}
+    \tdplotsetmaincoords{55}{160}
+    \begin{tikzpicture}[tdplot_main_coords]
+      \begin{scope}
+        \clip[tdplot_screen_coords] (0,0) circle (2);
+        \shade[tdplot_screen_coords, ball color=gray, opacity=0.4] (-0.1,0) ellipse (2.4 and 2);
+      \end{scope}
+
+      \tdplotsetrotatedcoords{0}{0}{-20}
+      \draw[tdplot_rotated_coords,blue] (2,0) arc (0:180:2);
+      \draw[tdplot_rotated_coords,dotted,blue] (-2,0) arc (180:360:2);
+      \fill[tdplot_rotated_coords,blue,opacity=0.1] (0,0) circle (2);
+
+      \tdplotsetrotatedcoords{0}{23.4}{0}
+      \draw[tdplot_rotated_coords,black,fill=black,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,below right,opacity=1,black] {\textbf{\aries}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{30}
+      \draw[tdplot_rotated_coords,black,fill=brown,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,right,opacity=1,black] {\textbf{\taurus}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{60}
+      \draw[tdplot_rotated_coords,black,fill=cyan,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,right,opacity=1,black] {\textbf{\gemini}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{90}
+      \draw[tdplot_rotated_coords,black,fill=green,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,above right,opacity=1,black] {\textbf{\cancer}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{120}
+      \draw[tdplot_rotated_coords,black,fill=magenta,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,above,opacity=1,black] {\textbf{\leo}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{150}
+      \draw[tdplot_rotated_coords,black,fill=olive,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,above,opacity=1,black] {\textbf{\virgo}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{180}
+      \draw[tdplot_rotated_coords,black,fill=orange,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,above left,opacity=1,black] {\textbf{\libra}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{210}
+      \draw[tdplot_rotated_coords,black,fill=pink,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,left,opacity=1,black] {\textbf{\scorpio}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{240}
+      \draw[tdplot_rotated_coords,black,fill=teal,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,left,opacity=1,black] {\textbf{\sagittarius}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{270}
+      \draw[tdplot_rotated_coords,black,fill=violet,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,below left,opacity=1,black] {\textbf{\capricornus}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{300}
+      \draw[tdplot_rotated_coords,black,fill=red,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,below,opacity=1,black] {\textbf{\aquarius}} -- (0,0);
+      \tdplotsetrotatedcoords{0}{23.4}{330}
+      \draw[tdplot_rotated_coords,black,fill=white,opacity=0.5]
+      (0,0) -- (0,2) arc (90:120:2)
+      node[midway,below,opacity=1,black] {\textbf{\pisces}} -- (0,0);
+
+      \draw[tdplot_screen_coords,black,fill=blue!75,opacity=0.5] (0,0) circle[radius=0.07];
+    \end{tikzpicture}
+  \end{center}
+
+  \begin{center}
+    \only<1>{
+      The zodiac sign you are born into is determined by the $\SI{30}{\degree}$
+      sector the Sun is in when you're born. They are named after constellations
+      that are found roughly in those directions.
+    }
+    \only<2>{
+      The equinox is also known as the \emph{first point of Aries} (\aries),
+      because that's literally what it is. Except the equinox has moved so much
+      by now that it's not in the constellation Aries any more.
+    }
+    \only<3>{
+      Most astrologists seem to have decided that it's more important that the
+      sectors move with the equinox (the tropical zodiac) than with the actual
+      constellations (the sidereal zodiac).
+    }
+  \end{center}
+\end{frame}
+
+\end{document}
